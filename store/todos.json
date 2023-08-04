@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "name": "Learn JS",
+        "complete": true
+    },
+    {
+        "id": 2,
+        "name": "Walk the dog",
+        "complete": false
+    },
+    {
+        "id": 3,
+        "name": "Go shopping",
+        "complete": false
+    },
+    {
+        "id": 4,
+        "name": "My name",
+        "complete": false
+    },
+    {
+        "id": 5,
+        "name": "My name",
+        "complete": false
+    },
+    {
+        "id": 6,
+        "name": "My name",
+        "complete": false
+    },
+    {
+        "id": 7,
+        "name": "Learn Javascript",
+        "complete": false
+    },
+    {
+        "id": 8,
+        "name": "Learn Javascript",
+        "complete": false
+    }
+]
