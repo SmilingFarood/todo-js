@@ -1,6 +1,10 @@
 const express = require('express')
 const fs = require('fs')
 const app = express()
+const port = 3000
+
+//import chalk from 'chalk';
+const chalk = require('chalk')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -98,7 +102,41 @@ app.post('/todo', (request, response) => {
     const todo = request.body
 })
 
+app.post('/file/create', (request, response) => {
+    const name = request.body.name
+    const quantity = request.body.quantity
+    const price = request.body.price
+    const csvData = '\n' + name + ',' + quantity + ',' + price
+    if (!name || !quantity || !price) {
+        return response.status(422).send('Missing parameters')
+    }
 
-app.listen(3000, () => {
-    console.log('Application running on http://localhost:3000')
+
+    fs.writeFile('groceries.csv', csvData, { flag: 'a' }, (err, _) => {
+        if (err) {
+            console.log(chalk.red(err.message))
+            return response.status(500).send('An error occured')
+        }
+        fs.readFile('groceries.csv', 'utf-8', (err, data) => {
+            if (err) {
+                return response.status(500).send('An error occured')
+            }
+            console.log(chalk.yellow(data))
+            // const jsData = JSON.parse(data)
+            return response.json({
+                data: data
+            })
+        })
+    })
+
 })
+
+
+
+
+app.listen(port, () => {
+    console.log(chalk.green('Application running on http://localhost:3000'))
+    console.log('Application running on http://localhost:${port} $port')
+
+})
+
