@@ -1,15 +1,18 @@
 const express = require('express')
+const axios = require('axios')
 const fs = require('fs')
 const app = express()
 const port = 3000
 
 //import chalk from 'chalk';
 const chalk = require('chalk')
+const { error } = require('console')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.get('/', (request, response) => {
+app.get('/', async (request, response) => {
+
     return response.send('Hello World!')
 })
 
@@ -106,6 +109,7 @@ app.post('/file/create', (request, response) => {
     const name = request.body.name
     const quantity = request.body.quantity
     const price = request.body.price
+
     const csvData = '\n' + name + ',' + quantity + ',' + price
     if (!name || !quantity || !price) {
         return response.status(422).send('Missing parameters')
@@ -131,12 +135,67 @@ app.post('/file/create', (request, response) => {
 
 })
 
+// Axios
+app.get('/request', async (resuest, response) => {
+
+    await axios({
+        method: 'get',
+        url: 'https://jsonplaceholder.typicode.com/todos',
+        params: {
+            _limit: 5
+        }
+    }).then((respo) => {
+
+        return response.json({ data: respo.data })
+
+    }).catch(
+        (err) => {
+            console.log(`This is error ${err}`)
+            return response.status(500).send(err)
+        }
+    )
+
+
+
+})
+// Axios
+app.patch('/request/:id', (request, response) => {
+    const id = request.params.id
+    //const title = request.body.title
+    //const complete = request.body.complete
+
+    const { title, complete } = request.body;
+
+    if (!title) {
+
+        return response.status(400).send('Input title')
+    }
+
+    console.log("title", title);
+    axios({
+        method: 'patch',
+        url: `https://jsonplaceholder.typicode.com/todos/${id}`,
+        data: {
+            title: title,
+            complete: complete
+        }
+    }).then(respo => {
+        // console.log(`This is the post response ${JSON.stringify(respo)}`)
+        return response.json({ data: respo.data })
+
+    }).catch(err => {
+        console.log(`This is an error ${err}`)
+        return response.status(500).send('Internal server error')
+    })
+})
+
+
 
 
 
 app.listen(port, () => {
-    console.log(chalk.green('Application running on http://localhost:3000'))
-    console.log('Application running on http://localhost:${port} $port')
+
+    console.log(chalk.green(`Application running on http://localhost:${port}`))
 
 })
 
